@@ -7,6 +7,7 @@
       "paths": {
         "@/*": ["./src/*"]
       },
+      "rootDir": ".",
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
