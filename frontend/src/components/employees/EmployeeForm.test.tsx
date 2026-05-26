@@ -23,7 +23,7 @@ describe('EmployeeForm', () => {
     expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/job title/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/department/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/country/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^country$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/salary/i)).toBeInTheDocument();
   });
 
@@ -45,7 +45,7 @@ describe('EmployeeForm', () => {
     await user.type(screen.getByLabelText(/last name/i),  validPayload.lastName);
     await user.type(screen.getByLabelText(/job title/i),  validPayload.jobTitle);
     await user.type(screen.getByLabelText(/department/i), validPayload.department);
-    await user.type(screen.getByLabelText(/country/i),    validPayload.country);
+    await user.type(screen.getByLabelText(/^country$/i),  validPayload.country);
     await user.type(screen.getByLabelText(/country code/i), validPayload.countryCode);
     await user.clear(screen.getByLabelText(/salary/i));
     await user.type(screen.getByLabelText(/salary/i),     String(validPayload.salary));
