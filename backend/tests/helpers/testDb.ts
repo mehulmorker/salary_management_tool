@@ -1,12 +1,13 @@
-import { PrismaClient } from '../../src/generated/prisma/client';
+import { PrismaClient } from '../../src/generated/prisma';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 
-// Create a Prisma client that always points at the test database
-export const testPrisma = new PrismaClient({} as never);
+// DATABASE_URL is set to 'file:./test.db' via Jest setupFiles before this runs
+const adapter = new PrismaBetterSqlite3({
+  url: process.env.DATABASE_URL ?? 'file:./test.db'
+});
 
-/**
- * Delete all rows from all tables (in dependency order).
- * Call this in beforeEach to ensure test isolation.
- */
+export const testPrisma = new PrismaClient({ adapter });
+
 export async function cleanDatabase(): Promise<void> {
   await testPrisma.employee.deleteMany();
 }

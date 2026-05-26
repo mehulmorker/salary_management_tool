@@ -38,6 +38,7 @@ const config: Config = {
       testEnvironment: 'node',
       testMatch: ['<rootDir>/tests/integration/**/*.test.ts'],
       moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
+      setupFiles: ['<rootDir>/tests/helpers/setTestEnv.ts'],
       globalSetup: '<rootDir>/tests/helpers/globalSetup.ts',
       globalTeardown: '<rootDir>/tests/helpers/globalTeardown.ts'
     }
