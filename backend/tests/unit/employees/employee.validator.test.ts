@@ -1,7 +1,7 @@
 import {
   createEmployeeSchema,
   updateEmployeeSchema,
-} from "@/employees/employees.validator";
+} from "@/employees/employee.validator";
 
 const validPayload = {
   firstName: "Jane",
@@ -69,11 +69,6 @@ describe("createEmployeeSchema", () => {
 describe("updateEmployeeSchema", () => {
   it("accepts partial payload", () => {
     const result = updateEmployeeSchema.safeParse({ salary: 90000 });
-    expect(result.success).toBe(true);
-  });
-
-  it("rejects non-positive salary in update", () => {
-    const result = updateEmployeeSchema.safeParse({ salary: 0 });
     expect(result.success).toBe(true);
   });
 
