@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, PieChart, Pie, Cell, Legend,
+  ResponsiveContainer, Cell,
 } from 'recharts';
 import { InsightsDashboard } from '../components/insights/InsightsDashboard';
 import {
@@ -114,36 +114,51 @@ export function InsightsPage() {
         )}
       </div>
 
-      {/* Department breakdown — pie */}
+      {/* Department breakdown */}
       {byDept.data && byDept.data.length > 0 && (
         <div style={card}>
-          <h2 style={sectionTitle}>Payroll Share by Department</h2>
-          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            <ResponsiveContainer width={320} height={260}>
-              <PieChart>
-                <Pie data={byDept.data} dataKey="payrollShare" nameKey="department" cx="50%" cy="50%" outerRadius={100}>
-                  {byDept.data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                </Pie>
-                <Tooltip formatter={(v) => typeof v === 'number' ? `${v.toFixed(1)}%` : ''} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-            <div style={{ flex: 1, overflowX: 'auto' }}>
+          <h2 style={sectionTitle}>Salary &amp; Headcount by Department</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+            {/* Bar chart — avg salary */}
+            <div>
+              <p style={{ margin: '0 0 12px', fontSize: 13, color: '#64748b', fontWeight: 500 }}>Average Salary</p>
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart
+                  data={[...byDept.data].sort((a, b) => b.avgSalary - a.avgSalary)}
+                  layout="vertical"
+                  margin={{ top: 0, right: 16, left: 80, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" tickFormatter={v => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 12 }} />
+                  <YAxis type="category" dataKey="department" tick={{ fontSize: 13 }} width={76} />
+                  <Tooltip formatter={(v) => typeof v === 'number' ? fmtUsd.format(v) : ''} />
+                  <Bar dataKey="avgSalary" name="Avg Salary" radius={[0,4,4,0]}>
+                    {byDept.data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Table */}
+            <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
-                  <tr style={{ background: '#f1f5f9' }}>
+                  <tr>
                     {['Department','Headcount','Avg Salary','Payroll Share'].map(h => (
-                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600 }}>{h}</th>
+                      <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 600, fontSize: 13, color: '#475569', background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {byDept.data.map(d => (
-                    <tr key={d.department} style={{ borderTop: '1px solid #e2e8f0' }}>
-                      <td style={{ padding: '8px 12px' }}>{d.department}</td>
-                      <td style={{ padding: '8px 12px' }}>{fmtNum.format(d.headcount)}</td>
-                      <td style={{ padding: '8px 12px' }}>{fmtUsd.format(d.avgSalary)}</td>
-                      <td style={{ padding: '8px 12px' }}>{d.payrollShare.toFixed(1)}%</td>
+                  {byDept.data.map((d, i) => (
+                    <tr key={d.department}>
+                      <td style={{ padding: '10px 12px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ width: 10, height: 10, borderRadius: '50%', background: COLORS[i % COLORS.length], display: 'inline-block', flexShrink: 0 }} />
+                        {d.department}
+                      </td>
+                      <td style={{ padding: '10px 12px', borderBottom: '1px solid #f1f5f9' }}>{fmtNum.format(d.headcount)}</td>
+                      <td style={{ padding: '10px 12px', borderBottom: '1px solid #f1f5f9', fontWeight: 600 }}>{fmtUsd.format(d.avgSalary)}</td>
+                      <td style={{ padding: '10px 12px', borderBottom: '1px solid #f1f5f9', color: '#64748b' }}>{d.payrollShare.toFixed(1)}%</td>
                     </tr>
                   ))}
                 </tbody>

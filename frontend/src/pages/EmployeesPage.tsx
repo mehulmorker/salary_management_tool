@@ -59,32 +59,35 @@ export function EmployeesPage() {
       <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
         <input
           type="search"
-          placeholder="Search by name…"
+          placeholder="🔍  Search by name…"
           value={search}
           onChange={e => { setSearch(e.target.value); setPage(1); }}
-          style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, flex: '1 1 200px' }}
+          style={{ padding: '9px 14px', border: '1px solid #cbd5e1', borderRadius: 8, flex: '1 1 220px', fontSize: 14, outline: 'none' }}
         />
         <input
           type="text"
           placeholder="Filter by country…"
           value={country}
           onChange={e => { setCountry(e.target.value); setPage(1); }}
-          style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, flex: '1 1 160px' }}
+          style={{ padding: '9px 14px', border: '1px solid #cbd5e1', borderRadius: 8, flex: '1 1 180px', fontSize: 14, outline: 'none' }}
         />
         <input
           type="text"
           placeholder="Filter by department…"
           value={department}
           onChange={e => { setDepartment(e.target.value); setPage(1); }}
-          style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, flex: '1 1 160px' }}
+          style={{ padding: '9px 14px', border: '1px solid #cbd5e1', borderRadius: 8, flex: '1 1 180px', fontSize: 14, outline: 'none' }}
         />
       </div>
 
-      {/* Error */}
-      {isError && <p style={{ color: '#ef4444' }}>Failed to load employees.</p>}
+      {isError && (
+        <div style={{ padding: '12px 16px', background: '#fee2e2', borderRadius: 8, color: '#dc2626', marginBottom: 16, fontSize: 14 }}>
+          Failed to load employees. Please try again.
+        </div>
+      )}
 
       {/* Table */}
-      <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+      <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 6px rgba(0,0,0,0.08)', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
         <EmployeeTable
           employees={data?.data ?? []}
           isLoading={isLoading}
@@ -98,7 +101,12 @@ export function EmployeesPage() {
 
       {/* Pagination */}
       {data && (
-        <Pagination page={page} totalPages={data.meta.totalPages} onPage={setPage} />
+        <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: 13, color: '#64748b' }}>
+            {data.meta.total.toLocaleString()} employees total
+          </span>
+          <Pagination page={page} totalPages={data.meta.totalPages} onPage={setPage} />
+        </div>
       )}
 
       {/* Add / Edit modal */}
