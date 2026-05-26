@@ -1,7 +1,7 @@
-import { EmployeeService } from "@/employees/employee.service";
 import { IEmployeeRepository } from "@/employees/employee.repository.interface";
 import { Employee } from "@/employees/employee.types";
 import { NotFoundError, ValidationError } from "@/shared/errors";
+import { EmployeeService } from "@/employees/employee.service";
 
 const mockEmployee: Employee = {
   id: 1,
@@ -44,7 +44,7 @@ describe("EmployeeService", () => {
       lastName: "Smith",
       jobTitle: "Software Engineer",
       department: "Engineering",
-      coutry: "India",
+      country: "India",
       countryCode: "IN",
       salary: 85000,
     };

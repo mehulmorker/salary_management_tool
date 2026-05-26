@@ -1,4 +1,4 @@
-export type EmploymentType = "FULL_TIME" | "PART_TIME" | "CONTRACT";
+export type EmploymentType = "FULL_TIME" | "PART_TIME" | "CONTRACT_TYPE";
 export type SeniorityLevel = "JUNIOR" | "MID" | "SENIOR" | "LEAD" | "EXEC";
 
 export interface Employee {

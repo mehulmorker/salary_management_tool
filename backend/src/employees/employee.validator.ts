@@ -12,9 +12,9 @@ export const createEmployeeSchema = z
     country: z.string().min(1, "Country is required"),
     countryCode: z.string().min(2).max(2),
     salary: z.number().positive("Salary must be positive"),
-    currency: z.string().default("USD"),
-    employmentType: z.enum(EMPLOYMENT_TYPES).default("FULL_TIME"),
-    seniorityLevel: z.enum(SENIORITY_LEVELS).default("MID"),
+    currency: z.string().optional().default("USD"),
+    employmentType: z.enum(EMPLOYMENT_TYPES).optional().default("FULL_TIME"),
+    seniorityLevel: z.enum(SENIORITY_LEVELS).optional().default("MID"),
     hireDate: z.iso.datetime().optional(),
   })
   .transform((data) => ({
