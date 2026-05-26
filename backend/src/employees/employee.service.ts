@@ -12,15 +12,45 @@ import { NotFoundError, ValidationError } from "../shared/errors";
 import { ZodError } from "zod";
 
 export class EmployeeService {
-  constructor(private readonly repositary: IEmployeeRepository) {}
+  constructor(private readonly repository: IEmployeeRepository) {}
+
+  async getEmployeeById(id: number): Promise<Employee> {
+    const employee = await this.repository.findById(id);
+    if (!employee) throw new NotFoundError("Employee", id);
+    return employee;
+  }
+
+  async listEmployees(filters: EmployeeFilters): Promise<PaginatedEmployees> {
+    return this.repository.findMany(filters);
+  }
 
   async createEmployee(input: unknown): Promise<Employee> {
     const data = this.parseOrThrow(createEmployeeSchema, input);
-    return this.repositary.create({
+    return this.repository.create({
       ...data,
       hireDate: data.hireDate ? new Date(data.hireDate) : new Date(),
       isActive: true,
     });
+  }
+
+  async updateEmployee(id: number, input: unknown): Promise<Employee> {
+    const existing = await this.repository.findById(id);
+    if (!existing) throw new NotFoundError("Employee", id);
+
+    const { hireDate, ...rest } = this.parseOrThrow(
+      updateEmployeeSchema,
+      input,
+    );
+    return this.repository.update(id, {
+      ...rest,
+      ...(hireDate ? { hireDate: new Date(hireDate) } : {}),
+    });
+  }
+
+  async deleteEmployee(id: number): Promise<Employee> {
+    const existing = await this.repository.findById(id);
+    if (!existing) throw new NotFoundError("Employee", id);
+    return this.repository.softDelete(id);
   }
 
   private parseOrThrow<T>(
