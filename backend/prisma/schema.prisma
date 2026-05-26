@@ -11,3 +11,27 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+model Employee {
+    id             Int      @id @default(autoincrement())
+    fullName       String
+    firstName      String
+    lastName       String
+    jobTitle       String
+    department     String
+    country        String
+    countryCode    String
+    salary         Float
+    currency       String   @default("USD")
+    employmentType String   @default("FULL_TIME")
+    seniorityLevel String   @default("MID")
+    hireDate       DateTime @default(now())
+    isActive       Boolean  @default(true)
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+
+    @@index([country])
+    @@index([jobTitle])
+    @@index([country, jobTitle])
+    @@index([isActive])
+  }
