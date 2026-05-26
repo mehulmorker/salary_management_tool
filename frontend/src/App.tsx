@@ -1,12 +1,16 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { PageLayout } from './components/shared/PageLayout';
+import { EmployeesPage } from './pages/EmployeesPage';
+import { InsightsPage } from './pages/InsightsPage';
 
-// Pages will be added in later steps
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/employees" replace />} />
-      <Route path="/employees" element={<div>Employees Page (coming soon)</div>} />
-      <Route path="/insights" element={<div>Insights Page (coming soon)</div>} />
+      <Route element={<PageLayout />}>
+        <Route path="/"          element={<Navigate to="/employees" replace />} />
+        <Route path="/employees" element={<EmployeesPage />} />
+        <Route path="/insights"  element={<InsightsPage />} />
+      </Route>
     </Routes>
   );
 }

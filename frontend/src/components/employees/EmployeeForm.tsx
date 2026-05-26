@@ -10,7 +10,7 @@ const schema = z.object({
   department:     z.string().min(1, 'Department is required'),
   country:        z.string().min(1, 'Country is required'),
   countryCode:    z.string().length(2, 'Country code must be 2 characters'),
-  salary:         z.number({ invalid_type_error: 'Salary is required' }).positive('Salary must be positive'),
+  salary:         z.number().positive('Salary must be positive'),
   seniorityLevel: z.enum(['JUNIOR', 'MID', 'SENIOR', 'LEAD', 'EXEC']).optional(),
   employmentType: z.enum(['FULL_TIME', 'PART_TIME', 'CONTRACT']).optional(),
   hireDate:       z.string().optional(),
