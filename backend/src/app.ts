@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { prisma as defaultPrisma } from './config/database';
 import { errorHandler } from './shared/errorHandler';
 import { createEmployeeRouter } from './employees/employee.routes';
+import { createInsightsRouter } from './insights/insights.routes';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createApp(prismaClient?: any): express.Application {
@@ -19,7 +20,7 @@ export function createApp(prismaClient?: any): express.Application {
   });
 
   app.use('/api/v1/employees', createEmployeeRouter(client));
-  // Insights routes added in next step
+  app.use('/api/v1/insights',  createInsightsRouter(client));
 
   app.use(errorHandler);
 

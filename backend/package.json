@@ -9,7 +9,7 @@
     "start": "node dist/server.js",
     "test": "jest",
     "test:unit": "jest --selectProjects unit",
-    "test:integration": "jest --selectProjects integration",
+    "test:integration": "jest --selectProjects integration --runInBand",
     "test:coverage": "jest --coverage",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

@@ -44,6 +44,11 @@ export class InsightsService {
     return this.repository.getTopEarners(n, country);
   }
 
+  async getDistribution(bucketSize: number, country?: string): Promise<SalaryBucket[]> {
+    const salaries = await this.repository.getAllSalaries(country);
+    return this.computeDistribution(salaries, bucketSize);
+  }
+
   computeDistribution(salaries: number[], bucketSize: number): SalaryBucket[] {
     if (salaries.length === 0) return [];
 
