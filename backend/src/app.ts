@@ -1,26 +1,26 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import { errorHandler } from "./shared/errorHandler";
-export function createApp(_prismaClient?: unknown): express.Application {
-  const app = express();
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import { prisma as defaultPrisma } from './config/database';
+import { errorHandler } from './shared/errorHandler';
+import { createEmployeeRouter } from './employees/employee.routes';
 
-  // Security & parsing middleware
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createApp(prismaClient?: any): express.Application {
+  const app    = express();
+  const client = prismaClient ?? defaultPrisma;
+
   app.use(helmet());
   app.use(cors());
   app.use(express.json());
 
-  // Health check — useful for deployment readiness probes
-  app.get("/health", (_req, res) => {
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
-  // Routes will be mounted here in the next step:
-  // const client = prismaClient ?? prisma;
-  // app.use('/api/v1/employees', createEmployeeRouter(client));
-  // app.use('/api/v1/insights', createInsightsRouter(client));
+  app.use('/api/v1/employees', createEmployeeRouter(client));
+  // Insights routes added in next step
 
-  // Global error handler — must be last
   app.use(errorHandler);
 
   return app;
