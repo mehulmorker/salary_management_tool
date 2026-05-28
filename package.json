@@ -12,7 +12,9 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "test:backend": "npm test --workspace=backend",
     "test:frontend": "npm test --workspace=frontend",
+    "db:generate:backend": "npm run db:generate --workspace=backend",
     "seed": "npm run seed --workspace=seed",
     "build": "npm run build --workspace=backend && npm run build --workspace=frontend"
-  }
+  },
+  "postinstall": "npm run db:generate:backend"
 }

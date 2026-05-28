@@ -6,29 +6,29 @@ A full-stack salary management tool for HR Managers to manage 10,000+ employees 
 
 ## Features
 
-| Area | What it does |
-|---|---|
-| **Employee CRUD** | Create, view, edit, soft-delete employees with full validation |
-| **Search & Filter** | Filter by name, country, department with live pagination |
+| Area                | What it does                                                                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Employee CRUD**   | Create, view, edit, soft-delete employees with full validation                                                                         |
+| **Search & Filter** | Filter by name, country, department with live pagination                                                                               |
 | **Salary Insights** | Summary stats, country breakdown, job-title drill-down, department analysis, seniority pay, salary distribution histogram, top earners |
-| **Seed** | One command loads 10,000 deterministic employees in < 200 ms |
+| **Seed**            | One command loads 10,000 deterministic employees in < 200 ms                                                                           |
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend | Node.js · Express v5 · TypeScript |
-| ORM | Prisma v7 + `better-sqlite3` driver adapter |
-| Database | SQLite (zero-ops, file-based) |
-| Validation | Zod v4 |
-| Frontend | React 19 · Vite · TypeScript |
-| Data Fetching | TanStack React Query |
-| Forms | react-hook-form + Zod |
-| Charts | Recharts |
-| Backend Tests | Jest · Supertest |
-| Frontend Tests | Vitest · React Testing Library |
+| Layer          | Technology                                  |
+| -------------- | ------------------------------------------- |
+| Backend        | Node.js · Express v5 · TypeScript           |
+| ORM            | Prisma v7 + `better-sqlite3` driver adapter |
+| Database       | SQLite (zero-ops, file-based)               |
+| Validation     | Zod v4                                      |
+| Frontend       | React 19 · Vite · TypeScript                |
+| Data Fetching  | TanStack React Query                        |
+| Forms          | react-hook-form + Zod                       |
+| Charts         | Recharts                                    |
+| Backend Tests  | Jest · Supertest                            |
+| Frontend Tests | Vitest · React Testing Library              |
 
 ---
 
@@ -51,7 +51,7 @@ npm install
 npm run db:migrate --workspace=backend
 ```
 
-This creates `backend/dev.db` with the Employee schema.
+This creates `backend/dev.db` with the Employee schema and generates the Prisma client code used by the backend.
 
 ### 3. Seed 10,000 employees
 
@@ -105,12 +105,12 @@ npm test --workspace=frontend
 
 ### Test counts
 
-| Suite | Tests | Speed |
-|---|---|---|
-| Backend unit | 30 | < 500 ms |
-| Backend integration | 15 | < 2 s |
-| Frontend components | 14 | < 2 s |
-| **Total** | **59** | |
+| Suite               | Tests  | Speed    |
+| ------------------- | ------ | -------- |
+| Backend unit        | 30     | < 500 ms |
+| Backend integration | 15     | < 2 s    |
+| Frontend components | 14     | < 2 s    |
+| **Total**           | **59** |          |
 
 ### TDD approach
 
@@ -128,13 +128,13 @@ Base URL: `http://localhost:3001/api/v1`
 
 ### Employees
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/employees` | Paginated list. Query params: `search`, `country`, `department`, `seniorityLevel`, `sortBy`, `sortOrder`, `page`, `limit` |
-| `POST` | `/employees` | Create employee. `fullName` is derived server-side from `firstName + lastName` |
-| `GET` | `/employees/:id` | Get single employee (404 if not found) |
-| `PUT` | `/employees/:id` | Partial update — only provided fields change |
-| `DELETE` | `/employees/:id` | Soft-delete — sets `isActive = false`, data preserved for insights |
+| Method   | Path             | Description                                                                                                               |
+| -------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/employees`     | Paginated list. Query params: `search`, `country`, `department`, `seniorityLevel`, `sortBy`, `sortOrder`, `page`, `limit` |
+| `POST`   | `/employees`     | Create employee. `fullName` is derived server-side from `firstName + lastName`                                            |
+| `GET`    | `/employees/:id` | Get single employee (404 if not found)                                                                                    |
+| `PUT`    | `/employees/:id` | Partial update — only provided fields change                                                                              |
+| `DELETE` | `/employees/:id` | Soft-delete — sets `isActive = false`, data preserved for insights                                                        |
 
 **Example — create employee:**
 
@@ -160,15 +160,15 @@ curl "http://localhost:3001/api/v1/employees?country=India&sortBy=salary&sortOrd
 
 ### Insights
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/insights/summary` | Headcount, total payroll, average salary |
-| `GET` | `/insights/by-country` | min / max / avg / median / headcount / payroll per country, sorted by headcount desc |
-| `GET` | `/insights/by-job-title?country=India` | avg salary per job title, optionally filtered by country |
-| `GET` | `/insights/by-department` | salary stats + payroll share % per department |
-| `GET` | `/insights/by-seniority` | avg salary by seniority level |
-| `GET` | `/insights/top-earners?n=10&country=India` | top N earners, optionally filtered by country |
-| `GET` | `/insights/distribution?bucketSize=10000&country=India` | salary histogram buckets |
+| Method | Path                                                    | Description                                                                          |
+| ------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `GET`  | `/insights/summary`                                     | Headcount, total payroll, average salary                                             |
+| `GET`  | `/insights/by-country`                                  | min / max / avg / median / headcount / payroll per country, sorted by headcount desc |
+| `GET`  | `/insights/by-job-title?country=India`                  | avg salary per job title, optionally filtered by country                             |
+| `GET`  | `/insights/by-department`                               | salary stats + payroll share % per department                                        |
+| `GET`  | `/insights/by-seniority`                                | avg salary by seniority level                                                        |
+| `GET`  | `/insights/top-earners?n=10&country=India`              | top N earners, optionally filtered by country                                        |
+| `GET`  | `/insights/distribution?bucketSize=10000&country=India` | salary histogram buckets                                                             |
 
 ---
 
@@ -216,18 +216,23 @@ Incubyte/
 ## Architecture Decisions
 
 ### Soft delete
+
 `isActive = false` instead of hard delete. Historical salary data is preserved for insights — deleted employees still contribute to min/max/avg calculations if queried directly (excluded from list views by default).
 
 ### Repository interface injection
+
 `EmployeeService` and `InsightsService` depend on `IEmployeeRepository` / `IInsightsRepository` interfaces, not concrete classes. This makes unit tests trivial (jest mock objects) without spinning up a database.
 
 ### Prisma v7 + driver adapter
+
 Prisma v7 removed the default Node.js engine and requires explicit driver adapters. `@prisma/adapter-better-sqlite3` is used — it wraps `better-sqlite3` and enables Prisma's query engine to run in-process, giving synchronous SQLite access with zero network overhead.
 
 ### Deterministic seed
+
 The seed script uses a Linear Congruential Generator with a fixed seed (`42`). Running `npm run seed` on a fresh database always produces the same 10,000 employees in the same order — reproducible for demos and testing.
 
 ### Integration test isolation
+
 Both integration test suites share a single `test.db`. Tests run with `--runInBand` (sequential) to prevent `employees.api.test.ts`'s `beforeEach(cleanDatabase)` from racing with `insights.api.test.ts`'s `beforeAll` seeding.
 
 ---
