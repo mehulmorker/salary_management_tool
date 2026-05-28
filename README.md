@@ -36,8 +36,8 @@ A full-stack salary management tool for HR Managers to manage 10,000+ employees 
 
 ### Prerequisites
 
-- Node.js ≥ 20
-- npm ≥ 10
+- Node.js ≥ 20 (`node --version` to check)
+- npm ≥ 10 (`npm --version` to check)
 
 ### 1. Install all dependencies
 
@@ -45,15 +45,31 @@ A full-stack salary management tool for HR Managers to manage 10,000+ employees 
 npm install
 ```
 
-### 2. Run the database migration
+This also auto-generates the Prisma client code into `backend/src/generated/prisma/` via the `postinstall` hook.
+
+### 2. Create the backend environment file
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+> **If there is no `.env.example`**, create `backend/.env` manually with:
+> ```env
+> DATABASE_URL=file:./dev.db
+> PORT=3001
+> ```
+>
+> This file is required — the Prisma CLI reads `DATABASE_URL` to locate the SQLite database. Without it, the migration in the next step will fail.
+
+### 3. Run the database migration
 
 ```bash
 npm run db:migrate --workspace=backend
 ```
 
-This creates `backend/dev.db` with the Employee schema and generates the Prisma client code used by the backend.
+This creates `backend/dev.db` and applies the Employee schema. If prompted for a migration name, enter any label (e.g. `init`).
 
-### 3. Seed 10,000 employees
+### 4. Seed 10,000 employees
 
 ```bash
 npm run seed
@@ -63,13 +79,15 @@ Output: `✓ Seeded 10,000 employees in 127ms`
 
 Re-running is safe — it exits immediately if the database is already seeded.
 
-### 4. Start the backend (port 3001)
+### 5. Start the backend — open a terminal and run:
 
 ```bash
 npm run dev:backend
 ```
 
-### 5. Start the frontend (port 5173)
+Leave this terminal running. You should see: `Server running on port 3001`
+
+### 6. Start the frontend — open a **second** terminal and run:
 
 ```bash
 npm run dev:frontend
@@ -77,16 +95,34 @@ npm run dev:frontend
 
 Open **http://localhost:5173**
 
+Both servers must be running at the same time. The frontend proxies API calls to `localhost:3001`.
+
 ---
 
 ## Environment Variables
 
-Create `backend/.env` to override defaults:
+`backend/.env` (created in Step 2 above):
 
 ```env
-DATABASE_URL=file:./dev.db   # default
-PORT=3001                    # default
+DATABASE_URL=file:./dev.db   # path to the SQLite database file
+PORT=3001                    # port the Express server listens on
 ```
+
+---
+
+## Troubleshooting
+
+**`prisma migrate dev` fails with "Cannot read DATABASE_URL"**
+→ `backend/.env` is missing. Complete Step 2 above.
+
+**`Cannot find module '../generated/prisma'`**
+→ The Prisma client wasn't generated. Run `npm install` again or `npm run db:generate:backend`.
+
+**Port 3001 or 5173 already in use**
+→ Kill the process using the port: `lsof -ti:3001 | xargs kill` (replace with `5173` for the frontend).
+
+**Frontend shows a blank page or "Network Error"**
+→ Make sure the backend is running (Step 5). Check `http://localhost:3001/api/v1/employees` in your browser — it should return JSON.
 
 ---
 
